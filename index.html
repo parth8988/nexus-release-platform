@@ -1,0 +1,2713 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>NEXUS — Release Intelligence</title>
+
+
+    <style>
+
+        /* =========================================
+           RESET
+        ========================================= */
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+        :root {
+
+            --background: #08090d;
+
+            --panel: #101218;
+
+            --panel-light: #151821;
+
+            --border: #252936;
+
+            --text: #f4f5f7;
+
+            --muted: #858b9b;
+
+            --orange: #ff8a3d;
+
+            --orange-light: #ffb26b;
+
+            --violet: #9b8cff;
+
+            --green: #45e6a4;
+
+            --red: #ff647c;
+
+            --blue: #62b5ff;
+
+        }
+
+
+        body {
+
+            min-height: 100vh;
+
+            background:
+                radial-gradient(
+                    circle at 80% 0%,
+                    rgba(155, 140, 255, 0.10),
+                    transparent 30%
+                ),
+                radial-gradient(
+                    circle at 20% 100%,
+                    rgba(255, 138, 61, 0.08),
+                    transparent 30%
+                ),
+                var(--background);
+
+            color: var(--text);
+
+            font-family:
+                Inter,
+                ui-sans-serif,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+
+            overflow-x: hidden;
+        }
+
+
+        /* =========================================
+           TOP BAR
+        ========================================= */
+
+        .topbar {
+
+            height: 70px;
+
+            border-bottom:
+                1px solid var(--border);
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            padding:
+                0 32px;
+
+            background:
+                rgba(8, 9, 13, 0.88);
+
+            backdrop-filter:
+                blur(20px);
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 100;
+        }
+
+
+        .logo {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+        }
+
+
+        .logo-mark {
+
+            width: 38px;
+
+            height: 38px;
+
+            display: grid;
+
+            place-items: center;
+
+            border:
+                1px solid
+                rgba(255, 138, 61, 0.45);
+
+            background:
+                rgba(255, 138, 61, 0.08);
+
+            color: var(--orange);
+
+            font-size: 18px;
+
+            font-weight: 900;
+
+            border-radius: 10px;
+        }
+
+
+        .logo-name {
+
+            font-size: 16px;
+
+            font-weight: 900;
+
+            letter-spacing: 0.08em;
+        }
+
+
+        .logo-name span {
+
+            color: var(--orange);
+        }
+
+
+        .top-right {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 25px;
+        }
+
+
+        .environment {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            color: var(--muted);
+
+            font-size: 11px;
+
+            text-transform: uppercase;
+
+            letter-spacing: 0.08em;
+        }
+
+
+        .live-dot {
+
+            width: 7px;
+
+            height: 7px;
+
+            background: var(--green);
+
+            border-radius: 50%;
+
+            box-shadow:
+                0 0 12px
+                rgba(69, 230, 164, 0.8);
+
+            animation:
+                blink 2s infinite;
+        }
+
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.35;
+            }
+        }
+
+
+        .clock {
+
+            font-family: monospace;
+
+            color: #b7bdca;
+
+            font-size: 12px;
+        }
+
+
+        /* =========================================
+           LAYOUT
+        ========================================= */
+
+        .layout {
+
+            display: grid;
+
+            grid-template-columns:
+                220px
+                1fr;
+
+            min-height:
+                calc(100vh - 70px);
+        }
+
+
+        /* =========================================
+           SIDEBAR
+        ========================================= */
+
+        .sidebar {
+
+            border-right:
+                1px solid var(--border);
+
+            padding:
+                28px 16px;
+
+            background:
+                rgba(10, 11, 16, 0.55);
+        }
+
+
+        .side-label {
+
+            color: #555b6b;
+
+            font-size: 9px;
+
+            font-weight: 800;
+
+            letter-spacing: 0.15em;
+
+            margin:
+                5px 12px
+                12px;
+        }
+
+
+        .nav-item {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 12px;
+
+            padding:
+                11px 12px;
+
+            margin-bottom: 4px;
+
+            border-radius: 8px;
+
+            color: var(--muted);
+
+            font-size: 12px;
+
+            cursor: pointer;
+
+            transition:
+                0.2s ease;
+        }
+
+
+        .nav-item:hover {
+
+            background:
+                rgba(255,255,255,0.035);
+
+            color: white;
+        }
+
+
+        .nav-item.active {
+
+            background:
+                rgba(255, 138, 61, 0.09);
+
+            color:
+                var(--orange);
+
+            border-left:
+                2px solid
+                var(--orange);
+        }
+
+
+        .nav-icon {
+
+            width: 18px;
+
+            text-align: center;
+
+            font-size: 14px;
+        }
+
+
+        .side-footer {
+
+            margin-top:
+                70px;
+
+            padding:
+                14px;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius: 10px;
+
+            background:
+                rgba(255,255,255,0.018);
+        }
+
+
+        .side-footer-title {
+
+            font-size: 10px;
+
+            color: var(--muted);
+
+            margin-bottom: 8px;
+        }
+
+
+        .side-footer-value {
+
+            font-size: 11px;
+
+            color: var(--green);
+
+            font-weight: 700;
+        }
+
+
+        /* =========================================
+           MAIN CONTENT
+        ========================================= */
+
+        main {
+
+            padding:
+                38px 42px 70px;
+
+            max-width:
+                1500px;
+
+            width: 100%;
+        }
+
+
+        .eyebrow {
+
+            color:
+                var(--orange);
+
+            font-size: 10px;
+
+            font-weight: 900;
+
+            letter-spacing:
+                0.18em;
+
+            text-transform:
+                uppercase;
+
+            margin-bottom:
+                12px;
+        }
+
+
+        .hero {
+
+            display: flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                flex-end;
+
+            gap: 30px;
+
+            margin-bottom:
+                32px;
+        }
+
+
+        .hero h1 {
+
+            font-size:
+                clamp(34px, 4vw, 58px);
+
+            line-height:
+                0.98;
+
+            letter-spacing:
+                -0.045em;
+
+            max-width:
+                720px;
+        }
+
+
+        .hero h1 span {
+
+            color:
+                var(--orange);
+        }
+
+
+        .hero-description {
+
+            color:
+                var(--muted);
+
+            font-size:
+                13px;
+
+            line-height:
+                1.7;
+
+            max-width:
+                560px;
+
+            margin-top:
+                16px;
+        }
+
+
+        .release-tag {
+
+            border:
+                1px solid
+                var(--border);
+
+            background:
+                var(--panel);
+
+            padding:
+                15px 18px;
+
+            border-radius:
+                10px;
+
+            min-width:
+                190px;
+        }
+
+
+        .release-tag small {
+
+            display:
+                block;
+
+            color:
+                var(--muted);
+
+            font-size:
+                9px;
+
+            text-transform:
+                uppercase;
+
+            letter-spacing:
+                0.1em;
+
+            margin-bottom:
+                7px;
+        }
+
+
+        .release-number {
+
+            font-size:
+                20px;
+
+            font-weight:
+                800;
+
+            color:
+                white;
+        }
+
+
+        /* =========================================
+           METRICS
+        ========================================= */
+
+        .metrics {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap:
+                12px;
+
+            margin-bottom:
+                18px;
+        }
+
+
+        .metric {
+
+            padding:
+                20px;
+
+            background:
+                var(--panel);
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius:
+                12px;
+
+            position:
+                relative;
+
+            overflow:
+                hidden;
+        }
+
+
+        .metric::after {
+
+            content: "";
+
+            position:
+                absolute;
+
+            width:
+                70px;
+
+            height:
+                70px;
+
+            right:
+                -35px;
+
+            top:
+                -35px;
+
+            border-radius:
+                50%;
+
+            background:
+                var(--orange);
+
+            filter:
+                blur(35px);
+
+            opacity:
+                0.08;
+        }
+
+
+        .metric-label {
+
+            color:
+                var(--muted);
+
+            font-size:
+                9px;
+
+            letter-spacing:
+                0.1em;
+
+            text-transform:
+                uppercase;
+
+            margin-bottom:
+                12px;
+        }
+
+
+        .metric-value {
+
+            font-size:
+                28px;
+
+            font-weight:
+                850;
+        }
+
+
+        .metric-change {
+
+            margin-top:
+                5px;
+
+            color:
+                var(--green);
+
+            font-size:
+                10px;
+        }
+
+
+        /* =========================================
+           RELEASE FLOW
+        ========================================= */
+
+        .section {
+
+            margin-top:
+                24px;
+        }
+
+
+        .section-title {
+
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            margin-bottom:
+                12px;
+        }
+
+
+        .section-title h2 {
+
+            font-size:
+                14px;
+
+            letter-spacing:
+                0.01em;
+        }
+
+
+        .section-title span {
+
+            color:
+                var(--muted);
+
+            font-size:
+                10px;
+        }
+
+
+        .release-panel {
+
+            padding:
+                28px;
+
+            background:
+                var(--panel);
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius:
+                14px;
+        }
+
+
+        .flow {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap:
+                0;
+
+            position:
+                relative;
+        }
+
+
+        .flow::before {
+
+            content: "";
+
+            position:
+                absolute;
+
+            left:
+                11%;
+
+            right:
+                11%;
+
+            top:
+                25px;
+
+            height:
+                1px;
+
+            background:
+                linear-gradient(
+                    90deg,
+                    var(--green),
+                    var(--green),
+                    var(--orange),
+                    var(--violet)
+                );
+
+            opacity:
+                0.55;
+        }
+
+
+        .flow-step {
+
+            text-align:
+                center;
+
+            position:
+                relative;
+
+            z-index:
+                2;
+        }
+
+
+        .flow-node {
+
+            width:
+                50px;
+
+            height:
+                50px;
+
+            margin:
+                auto;
+
+            display:
+                grid;
+
+            place-items:
+                center;
+
+            border-radius:
+                50%;
+
+            background:
+                #0b0d12;
+
+            border:
+                1px solid
+                var(--green);
+
+            color:
+                var(--green);
+
+            font-size:
+                16px;
+
+            box-shadow:
+                0 0 22px
+                rgba(69, 230, 164, 0.08);
+        }
+
+
+        .flow-step:nth-child(3)
+        .flow-node {
+
+            border-color:
+                var(--orange);
+
+            color:
+                var(--orange);
+        }
+
+
+        .flow-step:nth-child(4)
+        .flow-node {
+
+            border-color:
+                var(--violet);
+
+            color:
+                var(--violet);
+        }
+
+
+        .flow-name {
+
+            margin-top:
+                12px;
+
+            font-size:
+                11px;
+
+            font-weight:
+                800;
+        }
+
+
+        .flow-status {
+
+            margin-top:
+                5px;
+
+            color:
+                var(--muted);
+
+            font-size:
+                9px;
+        }
+
+
+        /* =========================================
+           CONTENT GRID
+        ========================================= */
+
+        .content-grid {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                1.35fr
+                0.65fr;
+
+            gap:
+                18px;
+
+            margin-top:
+                18px;
+        }
+
+
+        .card {
+
+            background:
+                var(--panel);
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius:
+                14px;
+
+            padding:
+                22px;
+        }
+
+
+        /* =========================================
+           EVENT STREAM
+        ========================================= */
+
+        .events {
+
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+            gap:
+                5px;
+        }
+
+
+        .event {
+
+            display:
+                grid;
+
+            grid-template-columns:
+                30px
+                1fr
+                auto;
+
+            align-items:
+                center;
+
+            gap:
+                10px;
+
+            padding:
+                12px 8px;
+
+            border-bottom:
+                1px solid
+                rgba(255,255,255,0.035);
+        }
+
+
+        .event:last-child {
+
+            border-bottom:
+                none;
+        }
+
+
+        .event-icon {
+
+            width:
+                27px;
+
+            height:
+                27px;
+
+            display:
+                grid;
+
+            place-items:
+                center;
+
+            border-radius:
+                7px;
+
+            background:
+                rgba(255,255,255,0.035);
+
+            font-size:
+                11px;
+        }
+
+
+        .event-text strong {
+
+            display:
+                block;
+
+            font-size:
+                11px;
+
+            margin-bottom:
+                3px;
+        }
+
+
+        .event-text span {
+
+            color:
+                var(--muted);
+
+            font-size:
+                9px;
+        }
+
+
+        .event-time {
+
+            color:
+                #555b6b;
+
+            font-size:
+                9px;
+
+            font-family:
+                monospace;
+        }
+
+
+        /* =========================================
+           HEALTH
+        ========================================= */
+
+        .health-item {
+
+            margin-bottom:
+                20px;
+        }
+
+
+        .health-head {
+
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            margin-bottom:
+                8px;
+        }
+
+
+        .health-name {
+
+            font-size:
+                10px;
+
+            color:
+                #cbd0da;
+        }
+
+
+        .health-value {
+
+            font-size:
+                10px;
+
+            font-family:
+                monospace;
+
+            color:
+                var(--muted);
+        }
+
+
+        .bar {
+
+            height:
+                5px;
+
+            background:
+                #20232d;
+
+            border-radius:
+                99px;
+
+            overflow:
+                hidden;
+        }
+
+
+        .bar-fill {
+
+            height:
+                100%;
+
+            border-radius:
+                inherit;
+
+            transition:
+                width 1s ease;
+        }
+
+
+        .orange-fill {
+
+            background:
+                var(--orange);
+        }
+
+
+        .green-fill {
+
+            background:
+                var(--green);
+        }
+
+
+        .violet-fill {
+
+            background:
+                var(--violet);
+        }
+
+
+        .blue-fill {
+
+            background:
+                var(--blue);
+        }
+
+
+        /* =========================================
+           RELEASE STREAM
+        ========================================= */
+
+        .release-list {
+
+            display:
+                flex;
+
+            flex-direction:
+                column;
+
+            gap:
+                8px;
+        }
+
+
+        .release-row {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            justify-content:
+                space-between;
+
+            padding:
+                13px;
+
+            background:
+                rgba(255,255,255,0.018);
+
+            border:
+                1px solid
+                rgba(255,255,255,0.035);
+
+            border-radius:
+                9px;
+        }
+
+
+        .release-left {
+
+            display:
+                flex;
+
+            align-items:
+                center;
+
+            gap:
+                11px;
+        }
+
+
+        .release-dot {
+
+            width:
+                8px;
+
+            height:
+                8px;
+
+            border-radius:
+                50%;
+
+            background:
+                var(--green);
+
+            box-shadow:
+                0 0 8px
+                rgba(69,230,164,0.45);
+        }
+
+
+        .release-info strong {
+
+            display:
+                block;
+
+            font-size:
+                10px;
+        }
+
+
+        .release-info span {
+
+            color:
+                var(--muted);
+
+            font-size:
+                9px;
+
+            margin-top:
+                3px;
+
+            display:
+                block;
+        }
+
+
+        .release-version {
+
+            color:
+                var(--muted);
+
+            font-size:
+                9px;
+
+            font-family:
+                monospace;
+        }
+
+
+        /* =========================================
+           ACTION PANEL
+        ========================================= */
+
+        .action-panel {
+
+            margin-top:
+                18px;
+
+            padding:
+                22px;
+
+            border-radius:
+                14px;
+
+            background:
+                linear-gradient(
+                    110deg,
+                    rgba(255,138,61,0.09),
+                    rgba(155,140,255,0.06)
+                );
+
+            border:
+                1px solid
+                rgba(255,138,61,0.15);
+
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            align-items:
+                center;
+
+            gap:
+                20px;
+        }
+
+
+        .action-panel h3 {
+
+            font-size:
+                15px;
+
+            margin-bottom:
+                6px;
+        }
+
+
+        .action-panel p {
+
+            color:
+                var(--muted);
+
+            font-size:
+                10px;
+        }
+
+
+        .action-button {
+
+            border:
+                none;
+
+            background:
+                var(--orange);
+
+            color:
+                #1a0d04;
+
+            font-weight:
+                900;
+
+            font-size:
+                10px;
+
+            padding:
+                12px 18px;
+
+            border-radius:
+                8px;
+
+            cursor:
+                pointer;
+
+            white-space:
+                nowrap;
+
+            transition:
+                0.2s ease;
+        }
+
+
+        .action-button:hover {
+
+            transform:
+                translateY(-2px);
+
+            box-shadow:
+                0 10px 30px
+                rgba(255,138,61,0.18);
+        }
+
+
+        /* =========================================
+           FOOTER
+        ========================================= */
+
+        footer {
+
+            margin-top:
+                45px;
+
+            padding-top:
+                18px;
+
+            border-top:
+                1px solid
+                var(--border);
+
+            display:
+                flex;
+
+            justify-content:
+                space-between;
+
+            color:
+                #555b6b;
+
+            font-size:
+                9px;
+        }
+
+
+        /* =========================================
+           TOAST
+        ========================================= */
+
+        .toast {
+
+            position:
+                fixed;
+
+            right:
+                25px;
+
+            bottom:
+                25px;
+
+            width:
+                310px;
+
+            padding:
+                16px;
+
+            background:
+                #151821;
+
+            border:
+                1px solid
+                var(--border);
+
+            border-radius:
+                10px;
+
+            box-shadow:
+                0 20px 60px
+                rgba(0,0,0,0.5);
+
+            transform:
+                translateY(120px);
+
+            opacity:
+                0;
+
+            transition:
+                0.3s ease;
+
+            z-index:
+                500;
+        }
+
+
+        .toast.show {
+
+            transform:
+                translateY(0);
+
+            opacity:
+                1;
+        }
+
+
+        .toast-title {
+
+            color:
+                var(--orange);
+
+            font-size:
+                10px;
+
+            font-weight:
+                900;
+
+            margin-bottom:
+                5px;
+        }
+
+
+        .toast-message {
+
+            color:
+                #c8ccd5;
+
+            font-size:
+                10px;
+
+            line-height:
+                1.5;
+        }
+
+
+        /* =========================================
+           RESPONSIVE
+        ========================================= */
+
+        @media(max-width: 1000px) {
+
+            .layout {
+
+                grid-template-columns:
+                    70px
+                    1fr;
+            }
+
+
+            .sidebar {
+
+                padding:
+                    20px 10px;
+            }
+
+
+            .side-label,
+            .nav-item span,
+            .side-footer {
+
+                display:
+                    none;
+            }
+
+
+            .nav-item {
+
+                justify-content:
+                    center;
+            }
+
+
+            .content-grid {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .metrics {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+            }
+
+        }
+
+
+        @media(max-width: 700px) {
+
+            .topbar {
+
+                padding:
+                    0 16px;
+            }
+
+
+            .environment {
+
+                display:
+                    none;
+            }
+
+
+            .layout {
+
+                display:
+                    block;
+            }
+
+
+            .sidebar {
+
+                display:
+                    none;
+            }
+
+
+            main {
+
+                padding:
+                    28px 18px 50px;
+            }
+
+
+            .hero {
+
+                flex-direction:
+                    column;
+
+                align-items:
+                    flex-start;
+            }
+
+
+            .metrics {
+
+                grid-template-columns:
+                    1fr 1fr;
+            }
+
+
+            .flow {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+                gap:
+                    28px;
+            }
+
+
+            .flow::before {
+
+                display:
+                    none;
+            }
+
+
+            .action-panel {
+
+                flex-direction:
+                    column;
+
+                align-items:
+                    flex-start;
+            }
+
+
+            footer {
+
+                flex-direction:
+                    column;
+
+                gap:
+                    8px;
+            }
+        }
+
+
+        @media(max-width: 430px) {
+
+            .metrics {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .flow {
+
+                grid-template-columns:
+                    1fr;
+            }
+
+
+            .hero h1 {
+
+                font-size:
+                    39px;
+            }
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================================
+         TOP BAR
+    ========================================== -->
+
+    <header class="topbar">
+
+        <div class="logo">
+
+            <div class="logo-mark">
+                N
+            </div>
+
+            <div class="logo-name">
+                NEXUS<span>.</span>
+            </div>
+
+        </div>
+
+
+        <div class="top-right">
+
+            <div class="environment">
+
+                <div class="live-dot"></div>
+
+                Production nominal
+
+            </div>
+
+
+            <div
+                class="clock"
+                id="clock"
+            >
+                --:--:--
+            </div>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================================
+         APPLICATION LAYOUT
+    ========================================== -->
+
+    <div class="layout">
+
+
+        <!-- SIDEBAR -->
+
+        <aside class="sidebar">
+
+            <div class="side-label">
+                CONTROL
+            </div>
+
+
+            <div
+                class="nav-item active"
+                onclick="selectNav(this)"
+            >
+
+                <div class="nav-icon">
+                    ◉
+                </div>
+
+                <span>
+                    Overview
+                </span>
+
+            </div>
+
+
+            <div
+                class="nav-item"
+                onclick="selectNav(this)"
+            >
+
+                <div class="nav-icon">
+                    ◇
+                </div>
+
+                <span>
+                    Releases
+                </span>
+
+            </div>
+
+
+            <div
+                class="nav-item"
+                onclick="selectNav(this)"
+            >
+
+                <div class="nav-icon">
+                    ⟡
+                </div>
+
+                <span>
+                    Pipeline
+                </span>
+
+            </div>
+
+
+            <div
+                class="nav-item"
+                onclick="selectNav(this)"
+            >
+
+                <div class="nav-icon">
+                    ▣
+                </div>
+
+                <span>
+                    Services
+                </span>
+
+            </div>
+
+
+            <div
+                class="nav-item"
+                onclick="selectNav(this)"
+            >
+
+                <div class="nav-icon">
+                    ≋
+                </div>
+
+                <span>
+                    Activity
+                </span>
+
+            </div>
+
+
+            <div class="side-label">
+                ENVIRONMENT
+            </div>
+
+
+            <div class="nav-item">
+
+                <div class="nav-icon">
+                    ●
+                </div>
+
+                <span>
+                    Production
+                </span>
+
+            </div>
+
+
+            <div class="nav-item">
+
+                <div class="nav-icon">
+                    ○
+                </div>
+
+                <span>
+                    Staging
+                </span>
+
+            </div>
+
+
+            <div class="side-footer">
+
+                <div class="side-footer-title">
+                    RELEASE ENGINE
+                </div>
+
+                <div class="side-footer-value">
+                    OPERATIONAL
+                </div>
+
+            </div>
+
+        </aside>
+
+
+        <!-- =====================================
+             MAIN
+        ====================================== -->
+
+        <main>
+
+
+            <!-- HERO -->
+
+            <section class="hero">
+
+                <div>
+
+                    <div class="eyebrow">
+                        Release Intelligence Platform
+                    </div>
+
+                    <h1>
+                        Ship with
+                        <span>
+                            certainty.
+                        </span>
+                    </h1>
+
+                    <p class="hero-description">
+
+                        NEXUS turns every source-code change
+                        into a visible release journey — from
+                        commit validation to cloud delivery.
+
+                    </p>
+
+                </div>
+
+
+                <div class="release-tag">
+
+                    <small>
+                        Current release
+                    </small>
+
+                    <div class="release-number">
+                        REL-042
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- METRICS -->
+
+            <section class="metrics">
+
+
+                <div class="metric">
+
+                    <div class="metric-label">
+                        Build success
+                    </div>
+
+                    <div class="metric-value">
+                        99.2%
+                    </div>
+
+                    <div class="metric-change">
+                        ↑ 2.4% this cycle
+                    </div>
+
+                </div>
+
+
+                <div class="metric">
+
+                    <div class="metric-label">
+                        Release time
+                    </div>
+
+                    <div class="metric-value">
+                        42s
+                    </div>
+
+                    <div class="metric-change">
+                        ↓ 8s faster
+                    </div>
+
+                </div>
+
+
+                <div class="metric">
+
+                    <div class="metric-label">
+                        Quality gate
+                    </div>
+
+                    <div class="metric-value">
+                        98.4
+                    </div>
+
+                    <div class="metric-change">
+                        ✓ Above threshold
+                    </div>
+
+                </div>
+
+
+                <div class="metric">
+
+                    <div class="metric-label">
+                        Deployments
+                    </div>
+
+                    <div class="metric-value">
+                        127
+                    </div>
+
+                    <div class="metric-change">
+                        ↑ 14 this week
+                    </div>
+
+                </div>
+
+
+            </section>
+
+
+            <!-- RELEASE FLOW -->
+
+            <section class="section">
+
+                <div class="section-title">
+
+                    <h2>
+                        Release pathway
+                    </h2>
+
+                    <span>
+                        REL-042 / main
+                    </span>
+
+                </div>
+
+
+                <div class="release-panel">
+
+                    <div class="flow">
+
+
+                        <div class="flow-step">
+
+                            <div class="flow-node">
+                                ✓
+                            </div>
+
+                            <div class="flow-name">
+                                SOURCE
+                            </div>
+
+                            <div class="flow-status">
+                                Commit accepted
+                            </div>
+
+                        </div>
+
+
+                        <div class="flow-step">
+
+                            <div class="flow-node">
+                                ✓
+                            </div>
+
+                            <div class="flow-name">
+                                BUILD
+                            </div>
+
+                            <div class="flow-status">
+                                CI passed
+                            </div>
+
+                        </div>
+
+
+                        <div class="flow-step">
+
+                            <div class="flow-node">
+                                →
+                            </div>
+
+                            <div class="flow-name">
+                                VERIFY
+                            </div>
+
+                            <div class="flow-status">
+                                Quality gate
+                            </div>
+
+                        </div>
+
+
+                        <div class="flow-step">
+
+                            <div class="flow-node">
+                                ◆
+                            </div>
+
+                            <div class="flow-name">
+                                SHIP
+                            </div>
+
+                            <div class="flow-status">
+                                Cloud ready
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- CONTENT GRID -->
+
+            <section class="content-grid">
+
+
+                <!-- EVENT STREAM -->
+
+                <div class="card">
+
+                    <div class="section-title">
+
+                        <h2>
+                            Event stream
+                        </h2>
+
+                        <span>
+                            LIVE
+                        </span>
+
+                    </div>
+
+
+                    <div class="events">
+
+
+                        <div class="event">
+
+                            <div class="event-icon">
+                                ✓
+                            </div>
+
+                            <div class="event-text">
+
+                                <strong>
+                                    Build validation completed
+                                </strong>
+
+                                <span>
+                                    CI engine verified release REL-042
+                                </span>
+
+                            </div>
+
+                            <div class="event-time">
+                                12:41:08
+                            </div>
+
+                        </div>
+
+
+                        <div class="event">
+
+                            <div class="event-icon">
+                                →
+                            </div>
+
+                            <div class="event-text">
+
+                                <strong>
+                                    Quality gate approved
+                                </strong>
+
+                                <span>
+                                    Release scored 98.4 / 100
+                                </span>
+
+                            </div>
+
+                            <div class="event-time">
+                                12:40:52
+                            </div>
+
+                        </div>
+
+
+                        <div class="event">
+
+                            <div class="event-icon">
+                                ◇
+                            </div>
+
+                            <div class="event-text">
+
+                                <strong>
+                                    Team notification dispatched
+                                </strong>
+
+                                <span>
+                                    ChatOps channel received release status
+                                </span>
+
+                            </div>
+
+                            <div class="event-time">
+                                12:40:31
+                            </div>
+
+                        </div>
+
+
+                        <div class="event">
+
+                            <div class="event-icon">
+                                ↑
+                            </div>
+
+                            <div class="event-text">
+
+                                <strong>
+                                    Source change detected
+                                </strong>
+
+                                <span>
+                                    main branch received new commit
+                                </span>
+
+                            </div>
+
+                            <div class="event-time">
+                                12:39:57
+                            </div>
+
+                        </div>
+
+
+                    </div>
+
+                </div>
+
+
+                <!-- HEALTH -->
+
+                <div class="card">
+
+                    <div class="section-title">
+
+                        <h2>
+                            System health
+                        </h2>
+
+                        <span>
+                            NORMAL
+                        </span>
+
+                    </div>
+
+
+                    <div class="health-item">
+
+                        <div class="health-head">
+
+                            <div class="health-name">
+                                CI capacity
+                            </div>
+
+                            <div
+                                class="health-value"
+                                id="ciValue"
+                            >
+                                72%
+                            </div>
+
+                        </div>
+
+                        <div class="bar">
+
+                            <div
+                                class="bar-fill orange-fill"
+                                style="width:72%"
+                                id="ciBar"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="health-item">
+
+                        <div class="health-head">
+
+                            <div class="health-name">
+                                Build workers
+                            </div>
+
+                            <div
+                                class="health-value"
+                            >
+                                48%
+                            </div>
+
+                        </div>
+
+                        <div class="bar">
+
+                            <div
+                                class="bar-fill green-fill"
+                                style="width:48%"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="health-item">
+
+                        <div class="health-head">
+
+                            <div class="health-name">
+                                Cloud capacity
+                            </div>
+
+                            <div
+                                class="health-value"
+                            >
+                                31%
+                            </div>
+
+                        </div>
+
+                        <div class="bar">
+
+                            <div
+                                class="bar-fill violet-fill"
+                                style="width:31%"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="health-item">
+
+                        <div class="health-head">
+
+                            <div class="health-name">
+                                Network
+                            </div>
+
+                            <div
+                                class="health-value"
+                            >
+                                18%
+                            </div>
+
+                        </div>
+
+                        <div class="bar">
+
+                            <div
+                                class="bar-fill blue-fill"
+                                style="width:18%"
+                            ></div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+
+            <!-- RELEASES -->
+
+            <section class="section">
+
+                <div class="section-title">
+
+                    <h2>
+                        Recent releases
+                    </h2>
+
+                    <span>
+                        LAST 24 HOURS
+                    </span>
+
+                </div>
+
+
+                <div class="release-list">
+
+
+                    <div class="release-row">
+
+                        <div class="release-left">
+
+                            <div class="release-dot"></div>
+
+                            <div class="release-info">
+
+                                <strong>
+                                    Authentication update
+                                </strong>
+
+                                <span>
+                                    Production · successful
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="release-version">
+                            REL-042
+                        </div>
+
+                    </div>
+
+
+                    <div class="release-row">
+
+                        <div class="release-left">
+
+                            <div class="release-dot"></div>
+
+                            <div class="release-info">
+
+                                <strong>
+                                    Dashboard optimization
+                                </strong>
+
+                                <span>
+                                    Production · successful
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="release-version">
+                            REL-041
+                        </div>
+
+                    </div>
+
+
+                    <div class="release-row">
+
+                        <div class="release-left">
+
+                            <div class="release-dot"></div>
+
+                            <div class="release-info">
+
+                                <strong>
+                                    API response improvements
+                                </strong>
+
+                                <span>
+                                    Production · successful
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <div class="release-version">
+                            REL-040
+                        </div>
+
+                    </div>
+
+
+                </div>
+
+            </section>
+
+
+            <!-- ACTION -->
+
+            <section class="action-panel">
+
+                <div>
+
+                    <h3>
+                        Run a release readiness check
+                    </h3>
+
+                    <p>
+                        Simulate the validation sequence before
+                        pushing a new production release.
+                    </p>
+
+                </div>
+
+
+                <button
+                    class="action-button"
+                    onclick="runCheck()"
+                >
+                    RUN CHECK
+                </button>
+
+            </section>
+
+
+            <!-- FOOTER -->
+
+            <footer>
+
+                <div>
+                    NEXUS Release Intelligence
+                </div>
+
+                <div>
+                    SOURCE → BUILD → VERIFY → SHIP
+                </div>
+
+            </footer>
+
+
+        </main>
+
+    </div>
+
+
+    <!-- TOAST -->
+
+    <div
+        class="toast"
+        id="toast"
+    >
+
+        <div
+            class="toast-title"
+            id="toastTitle"
+        >
+            NEXUS
+        </div>
+
+        <div
+            class="toast-message"
+            id="toastMessage"
+        >
+            Release system ready.
+        </div>
+
+    </div>
+
+
+    <script>
+
+
+        /* =========================================
+           CLOCK
+        ========================================= */
+
+        function updateClock() {
+
+            const now = new Date();
+
+            const time =
+                now.toLocaleTimeString(
+                    "en-IN",
+                    {
+                        hour12: false
+                    }
+                );
+
+            document
+                .getElementById("clock")
+                .textContent = time;
+        }
+
+
+        updateClock();
+
+        setInterval(
+            updateClock,
+            1000
+        );
+
+
+        /* =========================================
+           NAVIGATION
+        ========================================= */
+
+        function selectNav(element) {
+
+            document
+                .querySelectorAll(".nav-item")
+                .forEach(
+                    item => {
+                        item.classList.remove(
+                            "active"
+                        );
+                    }
+                );
+
+            element.classList.add(
+                "active"
+            );
+
+            showToast(
+                "Navigation",
+                element.innerText.trim()
+            );
+        }
+
+
+        /* =========================================
+           TOAST
+        ========================================= */
+
+        let toastTimer;
+
+
+        function showToast(
+            title,
+            message
+        ) {
+
+            const toast =
+                document.getElementById(
+                    "toast"
+                );
+
+            document.getElementById(
+                "toastTitle"
+            ).textContent =
+                title;
+
+            document.getElementById(
+                "toastMessage"
+            ).textContent =
+                message;
+
+            toast.classList.add(
+                "show"
+            );
+
+            clearTimeout(
+                toastTimer
+            );
+
+            toastTimer =
+                setTimeout(
+                    function() {
+
+                        toast.classList.remove(
+                            "show"
+                        );
+
+                    },
+                    3000
+                );
+        }
+
+
+        /* =========================================
+           RELEASE CHECK
+        ========================================= */
+
+        function runCheck() {
+
+            showToast(
+                "RELEASE CHECK",
+                "Reading source state..."
+            );
+
+
+            setTimeout(
+                function() {
+
+                    showToast(
+                        "BUILD",
+                        "CI validation passed."
+                    );
+
+                },
+                1200
+            );
+
+
+            setTimeout(
+                function() {
+
+                    showToast(
+                        "QUALITY",
+                        "Quality gate approved."
+                    );
+
+                },
+                2400
+            );
+
+
+            setTimeout(
+                function() {
+
+                    showToast(
+                        "RELEASE READY",
+                        "NEXUS reports the release is ready."
+                    );
+
+                },
+                3800
+            );
+        }
+
+
+        /* =========================================
+           SMALL LIVE HEALTH MOVEMENT
+        ========================================= */
+
+        setInterval(
+            function() {
+
+                const value =
+                    Math.floor(
+                        65 +
+                        Math.random() * 12
+                    );
+
+                const bar =
+                    document.getElementById(
+                        "ciBar"
+                    );
+
+                const label =
+                    document.getElementById(
+                        "ciValue"
+                    );
+
+                if (bar) {
+
+                    bar.style.width =
+                        value + "%";
+
+                }
+
+                if (label) {
+
+                    label.textContent =
+                        value + "%";
+
+                }
+
+            },
+            5000
+        );
+
+
+        /* =========================================
+           CONSOLE BRANDING
+        ========================================= */
+
+        console.log(
+            "%cNEXUS — Release Intelligence",
+            "color:#ff8a3d;font-size:18px;font-weight:bold;"
+        );
+
+        console.log(
+            "Source → Build → Verify → Ship"
+        );
+
+    </script>
+
+
+</body>
+
+</html>
